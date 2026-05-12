@@ -1,2 +1,2 @@
 export * from './product.mock';
-export * from './products.mock';
+export * from './listProducts.mock';
