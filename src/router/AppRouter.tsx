@@ -1,0 +1,15 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProductListPage from "@/pages/ProductListPage/ProductListPage";
+import ProductDetailPage from "@/pages/ProductDetailPage/ProductDetailPage";
+
+
+export default function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ProductListPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
