@@ -36,7 +36,7 @@ export function adaptListProducts(apiResponse: any): ProductsList {
 
         return { products };
     } catch (error) {
-        throw new Error(`Error adapatando lista de productos de API a modelo: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        throw new Error(`[adaptListProducts] Error adapatando lista de productos de API a modelo: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
 }
 
@@ -116,7 +116,7 @@ export function adaptProductDetail(apiResponse: any): ProductDetail {
 
         return adaptedDetail;
     } catch (error) {
-        throw new Error(`Error adapatando detalle de producto de API a modelo: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        throw new Error(`[adaptProductDetail] Error adapatando detalle de producto de API a modelo: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
 }
 

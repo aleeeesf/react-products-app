@@ -60,7 +60,6 @@ export function getCachedData<T>(key: string, expiration: number = ONE_HOUR): T 
  * @template T - Tipo genérico del valor a almacenar
  * @param key - Clave del elemento en caché
  * @param data - Datos a almacenar
- * @throws Error si hay problemas al escribir en localStorage
  */
 export function setCachedData<T>(key: string, data: T): void {
   try {

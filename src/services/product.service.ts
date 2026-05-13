@@ -6,8 +6,7 @@ import { adaptListProducts, adaptProductDetail } from '@/adapters';
 /**
  * Obtiene la lista de todos los productos
  * Usa caché con expiración de 1 hora para optimizar las peticiones
- * @throws Error si la petición falla, los datos son inválidos y error en la adaptación o
- * o error al guardar en caché
+ * @throws Error si la petición falla o los datos son inválidos y error en la adaptación
  * @returns Lista de productos (ProductsList)
  */
 export async function getProducts(): Promise<ProductsList> {
@@ -25,13 +24,12 @@ export async function getProducts(): Promise<ProductsList> {
         const adaptedProducts = adaptListProducts(apiProducts); // throws
         
         // Guardar en caché
-        setCachedData(cacheKey, adaptedProducts); // throws
+        setCachedData(cacheKey, adaptedProducts);
 
         return adaptedProducts;
     } catch (error) {
         // Gestionsr errores de forma centralizada si se necesita en el futuro :)
-        console.error('[getProducts] Error obteniendo los productos (', error instanceof Error ? error.message : error, ')');
-        throw error;
+        throw new Error('[getProducts] Error obteniendo los productos -> ' + (error instanceof Error ? error.message : 'Error desconocido'));
     }
 }
 
@@ -58,8 +56,8 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
         }
 
         // Si no hay caché, obtener de la API
-        const apiProductDetail = await fetchProductDetail(productId);
-        const adaptedProductDetail = adaptProductDetail(apiProductDetail);
+        const apiProductDetail = await fetchProductDetail(productId); // throws
+        const adaptedProductDetail = adaptProductDetail(apiProductDetail); // throws
         
         // Guardar en caché
         setCachedData(cacheKey, adaptedProductDetail);
@@ -67,7 +65,6 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
         return adaptedProductDetail;
     } catch (error) {
         // Gestionsr errores de forma centralizada si se necesita en el futuro :)
-        console.error(`[getProductDetail] Error obteniendo el detalle del producto ${productId} (`, error instanceof Error ? error.message : error, ')');
-        throw error;
+        throw new Error(`[getProductDetail] Error al obtener el detalle del producto ${productId} -> ` + (error instanceof Error ? error.message : 'Error desconocido'));
     }
 }

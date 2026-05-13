@@ -14,7 +14,7 @@ export async function fetchListProducts(): Promise<any> {
 
         if (!response.ok) {
             throw new Error(
-                `Error Fetch API - Status ${response.status}: ${response.statusText || 'Error desconocido al obtener la lista de productos de la API'}`
+                `[fetchListProducts] Error Fetch API - Status ${response.status}: ${response.statusText || 'Error desconocido al obtener la lista de productos de la API'}`
             );
         }
 
@@ -23,10 +23,10 @@ export async function fetchListProducts(): Promise<any> {
 
     } catch (error) {
         if (error instanceof TypeError) {
-            throw new Error('Error de red: no se pudo conectar con la API');
+            throw new Error('[fetchListProducts] Error de red: no se pudo conectar con la API');
         }
         if (error instanceof SyntaxError) {
-            throw new Error('La API devolvió un JSON inválido');
+            throw new Error('[fetchListProducts] La API devolvió un JSON inválido');
         }
         throw error;
     }
@@ -40,7 +40,7 @@ export async function fetchListProducts(): Promise<any> {
  */
 export async function fetchProductDetail(id: string): Promise<any> {
     if (!id || typeof id !== 'string') {
-        throw new Error('El ID de producto proporcionado no es válido');
+        throw new Error('[fetchProductDetail] El ID de producto proporcionado no es válido');
     }
 
     try {
@@ -50,12 +50,12 @@ export async function fetchProductDetail(id: string): Promise<any> {
         });
 
         if (response.status === 404) {
-            throw new Error(`Producto con ID ${id} no encontrado`);
+            throw new Error(`[fetchProductDetail] Producto con ID ${id} no encontrado`);
         }
 
         if (!response.ok) {
             throw new Error(
-                `Error Fetch API - Status ${response.status}: ${response.statusText || `Error desconocido al obtener el detalle del producto con ID ${id} de la API`}`
+                `[fetchProductDetail] Error Fetch API - Status ${response.status}: ${response.statusText || `Error desconocido al obtener el detalle del producto con ID ${id} de la API`}`
             );
         }
 
@@ -64,10 +64,10 @@ export async function fetchProductDetail(id: string): Promise<any> {
 
     } catch (error) {
         if (error instanceof TypeError) {
-            throw new Error('Error de red: no se pudo conectar con la API');
+            throw new Error('[fetchProductDetail] Error de red: no se pudo conectar con la API');
         }
         if (error instanceof SyntaxError) {
-            throw new Error('La API devolvió un JSON inválido');
+            throw new Error('[fetchProductDetail] La API devolvió un JSON inválido');
         }
         throw error;
     }
