@@ -1,11 +1,14 @@
 import './App.css'
 import AppRouter from './router/AppRouter'
+import { CartProvider } from "@/contexts";
 
 function App() {
 
   return (
     <>
-      <AppRouter />
+      <CartProvider>
+        <AppRouter />
+      </CartProvider>
     </>
   )
 }

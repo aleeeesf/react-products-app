@@ -1,13 +1,11 @@
 "use client";
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useCart } from '@/hooks';
 
-export type NavbarProps = {
-	cartCount?: number;
-}
-
-const Navbar: React.FC<NavbarProps>  = ({ cartCount = 0 }) => {
+const Navbar: React.FC = () => {
 	const location = useLocation();
+	const { cartCount } = useCart();
 	
 	const isProductDetail = location.pathname.includes('/product/');
 

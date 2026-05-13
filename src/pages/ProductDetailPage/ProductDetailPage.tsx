@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useProduct } from '@/hooks';
+import { useCart, useProduct } from '@/hooks';
 import { 
   ProductImage, 
   ProductHeader, 
@@ -17,6 +17,7 @@ import {
 
 const ProductDetailPage: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
+	const { addToCart } = useCart();
 	const { product, loading, error } = useProduct(id);
 	const [selectedColor, setSelectedColor] = useState<number | undefined>();
 	const [selectedStorage, setSelectedStorage] = useState<number | undefined>();
@@ -48,12 +49,18 @@ const ProductDetailPage: React.FC = () => {
 			return;
 		}
 
-
-		console.log('Añadido al carrito:',{
-			id,
-			colorCode: selectedColor,
-			storageCode: selectedStorage
-		});
+		if (id && selectedColor && selectedStorage) {
+			console.log('Añadido al carrito:',{
+				id,
+				colorCode: selectedColor,
+				storageCode: selectedStorage
+			});
+			addToCart({
+				id,
+				colorCode: selectedColor,
+				storageCode: selectedStorage
+			});
+		}
 	};
 
 	// Estado de carga
