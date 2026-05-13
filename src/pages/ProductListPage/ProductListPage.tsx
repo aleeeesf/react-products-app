@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { productsMock } from '@/mocks'
+import { useDebounce } from '@/hooks/useDebounce';
+import { useProductsList } from '@/hooks/useProductsList';
 
 export type ProductListPageProps = {
 	// types...
@@ -9,14 +10,16 @@ export type ProductListPageProps = {
 
 const ProductListPage: React.FC<ProductListPageProps>  = ({}) => {
 	const [searchTerm, setSearchTerm] = useState('');
-	const products = productsMock;
+	const debouncedSearch = useDebounce(searchTerm, 300);
+	const { products, loading, error } = useProductsList();
+	
+	const filteredProducts = products.filter(product =>
+		product.brand.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+		product.model.toLowerCase().includes(debouncedSearch.toLowerCase())
+	);
 
-	const filteredProducts = useMemo(() => {
-		return products.filter(product =>
-			product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			product.model.toLowerCase().includes(searchTerm.toLowerCase())
-		);
-	}, [searchTerm, products]);
+	if (loading) return <p>Loading...</p>;
+  	if (error) return <p>{error}</p>;
 
 	return (
 		<div className='w-full'>

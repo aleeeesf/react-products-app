@@ -1,24 +1,37 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { productMock } from '@/mocks';
+import { useProduct } from '@/hooks/useProduct';
+import { useParams } from "react-router-dom";
 
 export type ProductDetailPageProps = {
 	// types...
 }
 
 const ProductDetailPage: React.FC<ProductDetailPageProps>  = ({}) => {
-	const product = productMock;
-	const [selectedColor, setSelectedColor] = useState(product.options.colors[0]?.code);
-	const [selectedStorage, setSelectedStorage] = useState(product.options.storages[0]?.code);
+	const { id } = useParams();
+	const { product, loading, error } = useProduct(id)
+	const [selectedColor, setSelectedColor] = useState<number>();
+	const [selectedStorage, setSelectedStorage] = useState<number | undefined>();
+
+	useEffect(() => {
+		if (product) {
+			setSelectedColor(product.options.colors[0]?.code);
+			setSelectedStorage(product.options.storages[0]?.code);
+		}
+	}, [product]);
 
 	const handleAddToCart = () => {
 		console.log('Añadido al carrito:', {
-			id: product.id,
+			id: id,
 			colorCode: selectedColor,
 			storageCode: selectedStorage
 		});
 	};
+
+	if (loading) return <p>Loading...</p>;
+	if (error) return <p>{error}</p>;
+	if (!product) return <p>No product</p>;
 
 	return (
 		<div className=''>
