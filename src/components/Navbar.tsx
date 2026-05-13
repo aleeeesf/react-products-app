@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps>  = ({ cartCount = 0 }) => {
 					<Link 
 						to="/" 
 						className='text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors'
+						title="Ir a inicio"
 					>
 						TechStore
 					</Link>
