@@ -2,7 +2,7 @@ import { type ProductsList, type ProductDetail} from '@/models';
 
 export function adaptListProducts(apiResponse: any): ProductsList {
     return {
-        products: apiResponse.products.map((product: any) => ({
+        products: apiResponse.map((product: any) => ({
             id: product.id,
             brand: product.brand,
             model: product.model,
