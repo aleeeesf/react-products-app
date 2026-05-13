@@ -1,4 +1,4 @@
-import { type ProductsList, type ProductDetail } from '@/models';
+import { type Product, type ProductDetail, type ProductOptions } from '@/models';
 
 /**
  * Adapta la respuesta de la API de lista de productos al modelo
@@ -7,7 +7,7 @@ import { type ProductsList, type ProductDetail } from '@/models';
  * @throws Error si la estructura de datos es inválida
  * @returns Objeto ProductsList adaptado
  */
-export function adaptListProducts(apiResponse: any): ProductsList {
+export function adaptListProducts(apiResponse: any): Product[] {
     try {
         // Validamos que sea un array
         if (!Array.isArray(apiResponse)) {
@@ -15,11 +15,12 @@ export function adaptListProducts(apiResponse: any): ProductsList {
         }
 
         const products = apiResponse.map((product: any, index: number) => {
-            // Validar que cada producto tiene las propiedades requeridas
+            // Validar que cada producto es un objeto válido
             if (!product || typeof product !== 'object') {
                 throw new Error(`Producto en el índice ${index} no es un objeto válido`);
             }
 
+            // Validar que tiene ID -> propiedad crítica
             if (!product.id) {
                 throw new Error(`Producto en el índice ${index} no tiene la propiedad "id"`);
             }
@@ -27,14 +28,14 @@ export function adaptListProducts(apiResponse: any): ProductsList {
             // Garantizamos que todas las propiedades existan
             return {
                 id: String(product.id).trim(),
-                brand: String(product.brand || 'Desconocida').trim(),
-                model: String(product.model || 'Desconocido').trim(),
-                price: String(product.price || 'No disponible').trim(),
-                imgUrl: String(product.imgUrl || 'No disponible').trim()
+                brand: product.brand ? String(product.brand).trim() : 'Desconocida',
+                model: product.model ? String(product.model).trim() : 'Desconocido',
+                price: product.price ? String(product.price).trim() : 'No disponible',
+                imgUrl: product.imgUrl ? String(product.imgUrl).trim() : 'No disponible'
             };
         });
 
-        return { products };
+        return products;
     } catch (error) {
         throw new Error(`[adaptListProducts] Error adapatando lista de productos de API a modelo: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
@@ -59,60 +60,73 @@ export function adaptProductDetail(apiResponse: any): ProductDetail {
             throw new Error('El producto no tiene la propiedad "id"');
         }
 
+        // Base del producto (requerido)
         const adaptedDetail: ProductDetail = {
             id: String(apiResponse.id).trim(),
-            brand: String(apiResponse.brand || 'Desconocida').trim(),
-            model: String(apiResponse.model || 'Desconocido').trim(),
-            price: String(apiResponse.price || 'No disponible').trim(),
-            imgUrl: String(apiResponse.imgUrl || 'No disponible').trim(),
-            networkTechnology: String(apiResponse.networkTechnology || 'N/A').trim(),
-            networkSpeed: String(apiResponse.networkSpeed || 'N/A').trim(),
-            gprs: String(apiResponse.gprs || 'N/A').trim(),
-            edge: String(apiResponse.edge || 'N/A').trim(),
-            announced: String(apiResponse.announced || 'N/A').trim(),
-            status: String(apiResponse.status || 'N/A').trim(),
-            dimentions: String(apiResponse.dimentions || 'N/A').trim(),
-            weight: String(apiResponse.weight || 'N/A').trim(),
-            sim: String(apiResponse.sim || 'N/A').trim(),
-            displayType: String(apiResponse.displayType || 'N/A').trim(),
-            displayResolution: String(apiResponse.displayResolution || 'N/A').trim(),
-            displaySize: String(apiResponse.displaySize || 'N/A').trim(),
-            os: String(apiResponse.os || 'N/A').trim(),
-            cpu: String(apiResponse.cpu || 'N/A').trim(),
-            chipset: String(apiResponse.chipset || 'N/A').trim(),
-            gpu: String(apiResponse.gpu || 'N/A').trim(),
-            externalMemory: String(apiResponse.externalMemory || 'N/A').trim(),
-            internalMemory: ensureArray(apiResponse.internalMemory),
-            ram: String(apiResponse.ram || 'N/A').trim(),
-            primaryCamera: ensureArray(apiResponse.primaryCamera),
-            // ! API devuelve "secondaryCmera" con typo, lo normalizamos a "secondaryCamera"
-            secondaryCamera: ensureArray(apiResponse.secondaryCmera),
-            speaker: String(apiResponse.speaker || 'N/A').trim(),
-            audioJack: String(apiResponse.audioJack || 'N/A').trim(),
-            wlan: ensureArray(apiResponse.wlan),
-            bluetooth: ensureArray(apiResponse.bluetooth),
-            gps: String(apiResponse.gps || 'N/A').trim(),
-            nfc: String(apiResponse.nfc || 'N/A').trim(),
-            radio: String(apiResponse.radio || 'N/A').trim(),
-            usb: String(apiResponse.usb || 'N/A').trim(),
-            sensors: ensureArray(apiResponse.sensors),
-            battery: String(apiResponse.battery || 'N/A').trim(),
-            colors: ensureArray(apiResponse.colors),
-            options: {
-                colors: Array.isArray(apiResponse.options.colors)
-                    ? apiResponse.options.colors.map((c: any) => ({
-                        code: Number(c?.code ?? 0),
-                        name: String(c?.name || 'Desconocido').trim()
-                    }))
-                    : [],
-                storages: Array.isArray(apiResponse.options.storages)
-                    ? apiResponse.options.storages.map((s: any) => ({
-                        code: Number(s?.code ?? 0),
-                        name: String(s?.name || 'Desconocido').trim()
-                    }))
-                    : []
-            }
+            brand: apiResponse.brand ? String(apiResponse.brand).trim() : 'Desconocida',
+            model: apiResponse.model ? String(apiResponse.model).trim() : 'Desconocido',
+            price: apiResponse.price ? String(apiResponse.price).trim() : 'No disponible',
+            imgUrl: apiResponse.imgUrl ? String(apiResponse.imgUrl).trim() : 'No disponible'
         };
+
+        // Agregar propiedades opcionales solo si existen en la respuesta
+        if (apiResponse.networkTechnology) adaptedDetail.networkTechnology = String(apiResponse.networkTechnology).trim();
+        if (apiResponse.networkSpeed) adaptedDetail.networkSpeed = String(apiResponse.networkSpeed).trim();
+        if (apiResponse.gprs) adaptedDetail.gprs = String(apiResponse.gprs).trim();
+        if (apiResponse.edge) adaptedDetail.edge = String(apiResponse.edge).trim();
+        if (apiResponse.announced) adaptedDetail.announced = String(apiResponse.announced).trim();
+        if (apiResponse.status) adaptedDetail.status = String(apiResponse.status).trim();
+        if (apiResponse.dimentions) adaptedDetail.dimentions = String(apiResponse.dimentions).trim();
+        if (apiResponse.weight) adaptedDetail.weight = String(apiResponse.weight).trim();
+        if (apiResponse.sim) adaptedDetail.sim = String(apiResponse.sim).trim();
+        if (apiResponse.displayType) adaptedDetail.displayType = String(apiResponse.displayType).trim();
+        if (apiResponse.displayResolution) adaptedDetail.displayResolution = String(apiResponse.displayResolution).trim();
+        if (apiResponse.displaySize) adaptedDetail.displaySize = String(apiResponse.displaySize).trim();
+        if (apiResponse.os) adaptedDetail.os = String(apiResponse.os).trim();
+        if (apiResponse.cpu) adaptedDetail.cpu = String(apiResponse.cpu).trim();
+        if (apiResponse.chipset) adaptedDetail.chipset = String(apiResponse.chipset).trim();
+        if (apiResponse.gpu) adaptedDetail.gpu = String(apiResponse.gpu).trim();
+        if (apiResponse.externalMemory) adaptedDetail.externalMemory = String(apiResponse.externalMemory).trim();
+        if (apiResponse.internalMemory) adaptedDetail.internalMemory = ensureArray(apiResponse.internalMemory);
+        if (apiResponse.ram) adaptedDetail.ram = String(apiResponse.ram).trim();
+        if (apiResponse.primaryCamera) adaptedDetail.primaryCamera = ensureArray(apiResponse.primaryCamera);
+        // ! API devuelve "secondaryCmera" con typo, lo normalizamos a "secondaryCamera"
+        if (apiResponse.secondaryCmera) adaptedDetail.secondaryCamera = ensureArray(apiResponse.secondaryCmera);
+        if (apiResponse.speaker) adaptedDetail.speaker = String(apiResponse.speaker).trim();
+        if (apiResponse.audioJack) adaptedDetail.audioJack = String(apiResponse.audioJack).trim();
+        if (apiResponse.wlan) adaptedDetail.wlan = ensureArray(apiResponse.wlan);
+        if (apiResponse.bluetooth) adaptedDetail.bluetooth = ensureArray(apiResponse.bluetooth);
+        if (apiResponse.gps) adaptedDetail.gps = String(apiResponse.gps).trim();
+        if (apiResponse.nfc) adaptedDetail.nfc = String(apiResponse.nfc).trim();
+        if (apiResponse.radio) adaptedDetail.radio = String(apiResponse.radio).trim();
+        if (apiResponse.usb) adaptedDetail.usb = String(apiResponse.usb).trim();
+        if (apiResponse.sensors) adaptedDetail.sensors = ensureArray(apiResponse.sensors);
+        if (apiResponse.battery) adaptedDetail.battery = String(apiResponse.battery).trim();
+        if (apiResponse.colors) adaptedDetail.colors = ensureArray(apiResponse.colors);
+
+        // Manejar opciones de compra (colores y almacenamientos)
+        // Solo se agrega si existe la estructura options en la respuesta
+        if (apiResponse.options && typeof apiResponse.options === 'object') {
+            const options: ProductOptions = {};
+
+            if (Array.isArray(apiResponse.options.colors)) {
+                options.colors = apiResponse.options.colors.map((c: any) => ({
+                    code: Number(c?.code ?? 0),
+                    name: c?.name ? String(c.name).trim() : 'Desconocido'
+                }));
+            }
+
+            if (Array.isArray(apiResponse.options.storages)) {
+                options.storages = apiResponse.options.storages.map((s: any) => ({
+                    code: Number(s?.code ?? 0),
+                    name: s?.name ? String(s.name).trim() : 'Desconocido'
+                }));
+            }
+
+            if (Object.keys(options).length > 0) {
+                adaptedDetail.options = options;
+            }
+        }
 
         return adaptedDetail;
     } catch (error) {
@@ -121,12 +135,22 @@ export function adaptProductDetail(apiResponse: any): ProductDetail {
 }
 
 /**
- * Helper para asegurar valores en un array de strings
- * @param value - Valor que puede ser un string, un array o nulo
- * @returns Array de strings garantizado
+ * Convierte un valor a un array de strings
+ * @param value - Valor que puede ser un string, un array o undefined
+ * @returns Array de strings, vacío si el valor es undefined/null
  */
- const ensureArray = (value: any): string[] => {
-    if (Array.isArray(value)) return value.map(v => String(v || ''));
-    if (value) return [String(value)];
+const ensureArray = (value: any): string[] => {
+    if (Array.isArray(value)) {
+        return value
+            .map(v => {
+                const str = String(v ?? '').trim();
+                return str;
+            })
+            .filter(str => str.length > 0); // Filtra strings vacíos
+    }
+    if (value) {
+        const str = String(value).trim();
+        return str.length > 0 ? [str] : [];
+    }
     return [];
 };

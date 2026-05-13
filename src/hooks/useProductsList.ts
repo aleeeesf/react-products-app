@@ -29,7 +29,7 @@ export function useProductsList(): UseProductsListResult {
                 const data = await getProducts();
                 
                 if (isMounted) {
-                    setProducts(data.products);
+                    setProducts(data);
                 }
             } catch (err) {
                 if (isMounted) {

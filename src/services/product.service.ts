@@ -1,6 +1,6 @@
 import { getCachedData, setCachedData } from '@/utils';
 import { fetchListProducts, fetchProductDetail } from '@/api';
-import { type ProductsList, type ProductDetail } from '@/models';
+import { type Product, type ProductDetail } from '@/models';
 import { adaptListProducts, adaptProductDetail } from '@/adapters';
 
 /**
@@ -9,12 +9,12 @@ import { adaptListProducts, adaptProductDetail } from '@/adapters';
  * @throws Error si la petición falla o los datos son inválidos y error en la adaptación
  * @returns Lista de productos (ProductsList)
  */
-export async function getProducts(): Promise<ProductsList> {
+export async function getProducts(): Promise<Product[]> {
     const cacheKey = 'products';
     
     try {
         // Intentar obtener de la caché primero
-        const cachedData = getCachedData<ProductsList>(cacheKey);
+        const cachedData = getCachedData<Product[]>(cacheKey);
         if (cachedData) {
             return cachedData;
         }
