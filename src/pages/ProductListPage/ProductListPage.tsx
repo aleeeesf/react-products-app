@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useProductsList } from '@/hooks/useProductsList';
+import { useDebounce, useProductsList } from '@/hooks';
 
 
 const ProductListPage: React.FC = () => {
@@ -86,7 +85,7 @@ const ProductListPage: React.FC = () => {
 								{product.imgUrl ? (
 									<img
 										src={product.imgUrl}
-										alt={product.brand + ' ' + product.model}
+										alt={[product.brand, product.model].filter(Boolean).join(' ') || 'producto'}
 										className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
 										loading="lazy"
 									/>
@@ -104,7 +103,9 @@ const ProductListPage: React.FC = () => {
 									{product.model}
 								</h3>
 								<p className='text-lg font-bold text-blue-600 mt-3'>
-									{product.price}
+									{product.price && !isNaN(Number(product.price)) 
+									? `${product.price}€` 
+									: (product.price || 'Consultar precio')}
 								</p>
 							</div>
 						</Link>
