@@ -3,11 +3,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '@/components';
 
-export type MainLayoutProps = {
-	// types...
-}
-
-const MainLayout: React.FC<MainLayoutProps>  = ({}) => {
+const MainLayout: React.FC = () => {
 	return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar/>
