@@ -38,7 +38,7 @@ export async function postAddToCart(
 
     } catch (error) {
         if (error instanceof TypeError) {
-            throw new Error('[postAddToCart] Error de red: no se pudo conectar con la API');
+            throw new Error('[postAddToCart] Error de red: no se pudo conectar con la API', { cause: error });
         }
         throw error;
     }
