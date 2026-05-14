@@ -33,12 +33,6 @@ export async function addProductToCart(
 
         return response;
     } catch (error) {
-        throw new Error(
-            `[addProductToCart] Error al añadir producto ${payload.id} al carrito -> ${
-                error instanceof Error
-                    ? error.message
-                    : "Error desconocido"
-            }`
-        );
+        throw new Error(`[addProductToCart] Error al añadir producto ${payload.id} al carrito`, { cause: error });
     }
 }
