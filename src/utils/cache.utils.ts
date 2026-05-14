@@ -23,7 +23,7 @@ export function getCachedData<T>(key: string, expiration: number = ONE_HOUR): T 
     let parsedCache: CacheItem<T>;
     try {
         parsedCache = JSON.parse(cached);
-    } catch (parseError) {
+    } catch {
         console.warn(`[Cache] JSON Inválido para la key "${key}"`);
         localStorage.removeItem(key);
         return null;
