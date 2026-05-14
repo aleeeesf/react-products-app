@@ -19,27 +19,26 @@ export function useProductsList(): UseProductsListResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let isMounted = true;
+        let cancelled = false;
 
         const loadProducts = async () => {
             try {
                 setLoading(true);
                 setError(null);
-                
+
                 const data = await getProducts();
-                
-                if (isMounted) {
+
+                if (!cancelled) {
                     setProducts(data);
                 }
             } catch (err) {
-                if (isMounted) {
-                    const errorMessage = "Error inesperado al cargar los productos";
-                    setError(errorMessage);
+                if (!cancelled) {
+                    setError("Error inesperado al cargar los productos");
                     setProducts([]);
                     console.error("[useProductsList] Error loading products ->", err);
                 }
             } finally {
-                if (isMounted) {
+                if (!cancelled) {
                     setLoading(false);
                 }
             }
@@ -49,7 +48,7 @@ export function useProductsList(): UseProductsListResult {
 
         // Cleanup para evitar memory leaks
         return () => {
-            isMounted = false;
+            cancelled = true;
         };
     }, []);
 

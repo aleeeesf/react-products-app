@@ -15,20 +15,14 @@ interface UseProductResult {
  * @returns Objeto con detalles del producto, estado de carga y error
  */
 export function useProduct(productId?: string): UseProductResult {
-    const [product, setProduct] = useState<ProductDetail | undefined>();
-    const [loading, setLoading] = useState(true);
+    const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
+    const [loading, setLoading] = useState(Boolean(productId));
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        // Si no hay ID, no hacer nada
-        if (!productId || productId.trim() === '') {
-            setProduct(undefined);
-            setLoading(false);
-            setError(null);
-            return;
-        }
+        if (!productId?.trim()) return;
 
-        let isMounted = true;
+        let cancelled = false;
 
         const loadProduct = async () => {
             try {
@@ -37,18 +31,17 @@ export function useProduct(productId?: string): UseProductResult {
 
                 const productData = await getProductDetail(productId);
 
-                if (isMounted) {
+                if (!cancelled) {
                     setProduct(productData);
                 }
             } catch (err) {
-                if (isMounted) {
-                    const errorMessage = "Error inesperado al cargar el producto";
-                    setError(errorMessage);
+                if (!cancelled) {
+                    setError("Error inesperado al cargar el producto");
                     setProduct(undefined);
-                    console.error(`[useProduct] Error cargando los productos ${productId} ->`, err);
+                    console.error(`[useProduct] Error cargando producto ${productId} ->`, err);
                 }
             } finally {
-                if (isMounted) {
+                if (!cancelled) {
                     setLoading(false);
                 }
             }
@@ -56,9 +49,8 @@ export function useProduct(productId?: string): UseProductResult {
 
         loadProduct();
 
-        // Cleanup para evitar memory leaks y condiciones de carrera
         return () => {
-            isMounted = false;
+            cancelled = true;
         };
     }, [productId]);
 
