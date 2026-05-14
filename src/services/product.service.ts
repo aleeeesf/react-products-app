@@ -28,8 +28,7 @@ export async function getProducts(): Promise<Product[]> {
 
         return adaptedProducts;
     } catch (error) {
-        // Gestionsr errores de forma centralizada si se necesita en el futuro :)
-        throw new Error('[getProducts] Error obteniendo los productos -> ' + (error instanceof Error ? error.message : 'Error desconocido'));
+        throw new Error('[getProducts] Error obteniendo el catálogo de products', { cause: error });
     }
 }
 
@@ -64,7 +63,6 @@ export async function getProductDetail(productId: string): Promise<ProductDetail
 
         return adaptedProductDetail;
     } catch (error) {
-        // Gestionsr errores de forma centralizada si se necesita en el futuro :)
-        throw new Error(`[getProductDetail] Error al obtener el detalle del producto ${productId} -> ` + (error instanceof Error ? error.message : 'Error desconocido'));
+        throw new Error(`[getProductDetail] Error al obtener el detalle del producto ${productId}`, { cause: error });
     }
 }

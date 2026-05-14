@@ -8,7 +8,7 @@ interface CacheItem<T> {
 /**
  * Obtiene un valor de la caché de localStorage
  * Verifica expiración automáticamente (1 hora por defecto)
- * Si el caché expiró o es inválido, lo elimina y retorna null
+ * Si la caché expiró o es inválido, lo elimina y devuelve null
  * @template T - Tipo genérico del valor almacenado
  * @param key - Clave del elemento en caché
  * @returns Datos de la caché si es válido, null si no existe o expiró
