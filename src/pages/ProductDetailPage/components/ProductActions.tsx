@@ -40,16 +40,6 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, canAddT
             >
                 {!isPriceValid ? 'No Disponible' : 'Añadir al Carrito'}
             </button>
-
-            {/* Detalles adicionales */}
-            <div className='bg-gray-50 rounded-lg p-6 text-sm border border-gray-100'>
-                <p className='text-gray-600 leading-relaxed'>
-                    <span className='font-semibold text-gray-900'>Estado:</span> {product.status || 'No Disponible'}
-                </p>
-                <p className='text-gray-600 leading-relaxed mt-2'>
-                    <span className='font-semibold text-gray-900'>Dimensiones:</span> {product.dimentions || 'No Disponible'}
-                </p>
-            </div>
         </>
     );
 };
