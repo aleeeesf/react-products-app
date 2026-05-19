@@ -81,16 +81,16 @@ const ProductListPage: React.FC = () => {
 							to={`/product/${product.id}`}
 							className='bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group'
 						>
-							<div className='aspect-square bg-gray-100 overflow-hidden'>
+							<div className='aspect-square bg-white overflow-hidden p-4'>
 								{product.imgUrl ? (
 									<img
 										src={product.imgUrl}
 										alt={[product.brand, product.model].filter(Boolean).join(' ') || 'producto'}
-										className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+										className='w-full h-full object-contain group-hover:scale-105 transition-transform duration-300'
 										loading="lazy"
 									/>
 								) : (
-									<div className='w-full h-full flex items-center justify-center bg-gray-200 text-gray-500'>
+									<div className='w-full h-full flex items-center justify-center bg-gray-100 text-gray-500'>
 										No hay imagen
 									</div>
 								)}

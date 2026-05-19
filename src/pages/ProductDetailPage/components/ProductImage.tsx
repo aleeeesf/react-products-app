@@ -8,12 +8,12 @@ import type { ProductDetail } from '@/models';
 export const ProductImage: React.FC<{ product: ProductDetail }> = ({ product }) => {
 	return (
 		<div className='flex items-start lg:sticky top-24'>
-			<div className='w-full bg-gray-100 rounded-lg overflow-hidden aspect-square'>
+			<div className='w-full bg-white rounded-lg overflow-hidden aspect-square p-4'>
 				{product.imgUrl ? (
 					<img
 						src={product.imgUrl}
 						alt={[product.brand, product.model].filter(Boolean).join(' ') || 'producto'}
-						className='w-full h-full object-cover'
+						className='w-full h-full object-contain p-4'
 					/>
 				) : (
 					<div className='w-full h-full flex items-center justify-center text-gray-400'>
