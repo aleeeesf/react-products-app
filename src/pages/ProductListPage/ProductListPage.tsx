@@ -52,7 +52,7 @@ const ProductListPage: React.FC = () => {
 	return (
 		<div className='w-full'>
 			{/* Barra de búsqueda */}
-			<div className='mb-8'>
+			<div className='mb-8 flex justify-end'>
 				<div className='lg:w-72 flex gap-3 items-center'>
 					<input
 						id="search"
